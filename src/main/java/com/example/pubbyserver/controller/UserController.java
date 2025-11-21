@@ -1,5 +1,6 @@
 package com.example.pubbyserver.controller;
 
+import com.example.pubbyserver.annotation.OperationLog;
 import com.example.pubbyserver.entity.User;
 import com.example.pubbyserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class UserController {
      * 创建新用户
      */
     @PostMapping
+    @OperationLog(module = "用户管理", type = "INSERT")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
@@ -52,6 +54,7 @@ public class UserController {
      * 更新用户信息
      */
     @PutMapping("/{id}")
+    @OperationLog(module = "用户管理", type = "UPDATE")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
         if (updatedUser != null) {
@@ -66,6 +69,7 @@ public class UserController {
      * 删除用户
      */
     @DeleteMapping("/{id}")
+    @OperationLog(module = "用户管理", type = "DELETE")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         boolean deleted = userService.deleteUser(id);
         if (deleted) {
