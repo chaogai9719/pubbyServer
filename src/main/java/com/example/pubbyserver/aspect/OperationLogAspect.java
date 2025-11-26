@@ -28,7 +28,7 @@ public class OperationLogAspect {
         long startTime = System.currentTimeMillis();
 
         // 获取操作人
-        String operator = getCurrentUsername();
+        String operator = getCurrentUsername(joinPoint, operationLog);
 
         // 获取IP地址
         String ipAddress = getClientIpAddress();
@@ -71,8 +71,19 @@ public class OperationLogAspect {
      *
      * @return 用户名
      */
-    private String getCurrentUsername() {
+    private String getCurrentUsername(ProceedingJoinPoint joinPoint, com.example.pubbyserver.annotation.OperationLog operationLog) {
         try {
+            // 对于登录操作特殊处理：从方法参数中获取用户名
+            if ("LOGIN".equals(operationLog.type())) {
+                // 从joinPoint参数中查找LoginRequest对象
+                Object[] args = joinPoint.getArgs();
+                for (Object arg : args) {
+                    if (arg instanceof com.example.pubbyserver.entity.LoginRequest) {
+                        return ((com.example.pubbyserver.entity.LoginRequest) arg).getUsername();
+                    }
+                }
+            }
+            // 尝试从SecurityContext获取用户名
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
                 return authentication.getName();

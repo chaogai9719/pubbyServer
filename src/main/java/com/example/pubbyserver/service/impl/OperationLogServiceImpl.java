@@ -20,27 +20,18 @@ public class OperationLogServiceImpl implements OperationLogService {
     }
 
     @Override
-    public OperationLogEntity getOperationLogById(Long id) {
-        return operationLogDao.getOperationLogById(id);
-    }
-
-    @Override
     public List<OperationLogEntity> getAllOperationLogs() {
         return operationLogDao.getAllOperationLogs();
     }
 
     @Override
-    public List<OperationLogEntity> getOperationLogsByModule(String module) {
-        return operationLogDao.getOperationLogsByModule(module);
+    public List<OperationLogEntity> getOperationLogsByPage(int page, int size, String operationModule, String operationType, String operator) {
+        int offset = page * size;
+        return operationLogDao.getOperationLogsByPage(offset, size, operationModule, operationType, operator);
     }
 
     @Override
-    public List<OperationLogEntity> getOperationLogsByOperator(String operator) {
-        return operationLogDao.getOperationLogsByOperator(operator);
-    }
-
-    @Override
-    public List<OperationLogEntity> getOperationLogsByType(String type) {
-        return operationLogDao.getOperationLogsByType(type);
+    public int countOperationLogs(String operationModule, String operationType, String operator) {
+        return operationLogDao.countOperationLogs(operationModule, operationType, operator);
     }
 }

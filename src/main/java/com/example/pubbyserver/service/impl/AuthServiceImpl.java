@@ -36,10 +36,16 @@ public class AuthServiceImpl implements AuthService {
             response.setToken(token);
             user.setPassword(null);
             response.setUser(user);
-            
+
             return response;
         }
         
         return null;
+    }
+    
+    @Override
+    public void logout(String token) {
+        // 真正使token失效，而不仅仅是加入黑名单
+        jwtUtil.invalidateToken(token);
     }
 }

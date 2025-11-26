@@ -18,24 +18,41 @@
         VALUES(#{operationModule}, #{operationType}, #{operator}, #{operationTime}, #{ipAddress}, #{executionTime}, #{status})
     </insert>
 
-    <select id="getOperationLogById" resultMap="OperationLogResultMap" parameterType="long">
-        SELECT * FROM operation_log WHERE id = #{id}
-    </select>
 
     <select id="getAllOperationLogs" resultMap="OperationLogResultMap">
         SELECT * FROM operation_log ORDER BY operation_time DESC
     </select>
 
-    <select id="getOperationLogsByModule" resultMap="OperationLogResultMap" parameterType="string">
-        SELECT * FROM operation_log WHERE operation_module = #{module} ORDER BY operation_time DESC
+    <select id="getOperationLogsByPage" resultMap="OperationLogResultMap">
+        SELECT * FROM operation_log
+        <where>
+            <if test="operationModule != null and operationModule != ''">
+                AND operation_module LIKE CONCAT('%', #{operationModule}, '%')
+            </if>
+            <if test="operationType != null and operationType != ''">
+                AND operation_type LIKE CONCAT('%', #{operationType}, '%')
+            </if>
+            <if test="operator != null and operator != ''">
+                AND operator LIKE CONCAT('%', #{operator}, '%')
+            </if>
+        </where>
+        ORDER BY operation_time DESC
+        LIMIT #{offset}, #{size}
     </select>
 
-    <select id="getOperationLogsByOperator" resultMap="OperationLogResultMap" parameterType="string">
-        SELECT * FROM operation_log WHERE operator = #{operator} ORDER BY operation_time DESC
-    </select>
-
-    <select id="getOperationLogsByType" resultMap="OperationLogResultMap" parameterType="string">
-        SELECT * FROM operation_log WHERE operation_type = #{type} ORDER BY operation_time DESC
+    <select id="countOperationLogs" resultType="int">
+        SELECT COUNT(*) FROM operation_log
+        <where>
+            <if test="operationModule != null and operationModule != ''">
+                AND operation_module LIKE CONCAT('%', #{operationModule}, '%')
+            </if>
+            <if test="operationType != null and operationType != ''">
+                AND operation_type LIKE CONCAT('%', #{operationType}, '%')
+            </if>
+            <if test="operator != null and operator != ''">
+                AND operator LIKE CONCAT('%', #{operator}, '%')
+            </if>
+        </where>
     </select>
 
 </mapper>

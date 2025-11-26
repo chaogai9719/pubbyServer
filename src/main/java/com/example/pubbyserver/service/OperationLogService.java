@@ -14,14 +14,6 @@ public interface OperationLogService {
     void saveOperationLog(OperationLogEntity operationLog);
 
     /**
-     * 根据ID获取操作日志
-     *
-     * @param id 日志ID
-     * @return 操作日志实体
-     */
-    OperationLogEntity getOperationLogById(Long id);
-
-    /**
      * 获取所有操作日志
      *
      * @return 操作日志列表
@@ -29,26 +21,24 @@ public interface OperationLogService {
     List<OperationLogEntity> getAllOperationLogs();
 
     /**
-     * 根据模块名称获取操作日志
+     * 分页获取操作日志
      *
-     * @param module 模块名称
-     * @return 操作日志列表
-     */
-    List<OperationLogEntity> getOperationLogsByModule(String module);
-
-    /**
-     * 根据操作人获取操作日志
-     *
+     * @param page 页面序号(从0开始)
+     * @param size 页面大小
+     * @param operationModule 操作模块
+     * @param operationType 操作类型
      * @param operator 操作人
      * @return 操作日志列表
      */
-    List<OperationLogEntity> getOperationLogsByOperator(String operator);
+    List<OperationLogEntity> getOperationLogsByPage(int page, int size, String operationModule, String operationType, String operator);
 
     /**
-     * 根据操作类型获取操作日志
+     * 统计符合条件的操作日志数量
      *
-     * @param type 操作类型
-     * @return 操作日志列表
+     * @param operationModule 操作模块
+     * @param operationType 操作类型
+     * @param operator 操作人
+     * @return 日志数量
      */
-    List<OperationLogEntity> getOperationLogsByType(String type);
+    int countOperationLogs(String operationModule, String operationType, String operator);
 }
