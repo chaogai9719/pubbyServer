@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.pubbyserver.dao.QuarrelRecordDao">
+
+    <resultMap id="QuarrelRecordResultMap" type="com.example.pubbyserver.entity.QuarrelRecord">
+        <id property="id" column="id"/>
+        <result property="theme" column="theme"/>
+        <result property="reason" column="reason"/>
+        <result property="quarrelDate" column="quarrel_date"/>
+        <result property="reflection" column="reflection"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <insert id="insertQuarrelRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quarrel_record(theme, reason, quarrel_date, reflection, create_time, update_time, create_by, update_by)
+        VALUES(#{theme}, #{reason}, #{quarrelDate}, #{reflection}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
+    </insert>
+
+    <update id="updateQuarrelRecord">
+        UPDATE quarrel_record
+        <set>
+            <if test="theme != null and theme != ''">
+                theme = #{theme},
+            </if>
+            <if test="reason != null and reason != ''">
+                reason = #{reason},
+            </if>
+            <if test="quarrelDate != null">
+                quarrel_date = #{quarrelDate},
+            </if>
+            <if test="reflection != null and reflection != ''">
+                reflection = #{reflection},
+            </if>
+            update_time = #{updateTime},
+            update_by = #{updateBy}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteQuarrelRecordById">
+        DELETE FROM quarrel_record WHERE id = #{id}
+    </delete>
+
+    <select id="getQuarrelRecordById" resultMap="QuarrelRecordResultMap">
+        SELECT * FROM quarrel_record WHERE id = #{id}
+    </select>
+
+    <select id="getAllQuarrelRecords" resultMap="QuarrelRecordResultMap">
+        SELECT * FROM quarrel_record ORDER BY quarrel_date DESC
+    </select>
+
+    <select id="getQuarrelRecordsByPage" resultMap="QuarrelRecordResultMap">
+        SELECT * FROM quarrel_record
+        <where>
+            <if test="theme != null and theme != ''">
+                AND theme LIKE CONCAT('%', #{theme}, '%')
+            </if>
+        </where>
+        ORDER BY quarrel_date DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="countQuarrelRecords" resultType="int">
+        SELECT COUNT(*) FROM quarrel_record
+        <where>
+            <if test="theme != null and theme != ''">
+                AND theme LIKE CONCAT('%', #{theme}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
