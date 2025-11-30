@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.pubbyserver.dao.DogDao">
+
+    <resultMap id="DogMap" type="com.example.pubbyserver.entity.Dog">
+        <id property="id" column="id"/>
+        <result property="dogImage" column="dog_image"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, dog_image, description, create_time, update_time, create_by, update_by
+    </sql>
+
+    <select id="selectById" parameterType="long" resultMap="DogMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM dog
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="DogMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM dog
+    </select>
+
+    <insert id="insert" parameterType="com.example.pubbyserver.entity.Dog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO dog (dog_image, description, create_time, update_time, create_by, update_by)
+        VALUES (#{dogImage}, #{description}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
+    </insert>
+
+    <update id="update" parameterType="com.example.pubbyserver.entity.Dog">
+        UPDATE dog
+        <set>
+            <if test="dogImage != null and dogImage != ''">
+                dog_image = #{dogImage},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            update_time = #{updateTime},
+            update_by = #{updateBy}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM dog WHERE id = #{id}
+    </delete>
+
+</mapper>
